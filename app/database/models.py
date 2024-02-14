@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship, Mapped, DeclarativeBase, mapped_column
 load_dotenv()
 db = os.getenv('SQLALCHEMY_DATABASE_URI')
 
-engine = create_async_engine(db, echo=True)
+engine = create_async_engine(url=db, echo=True)
 
 async_session = async_sessionmaker(engine)
 
@@ -32,7 +32,7 @@ class Category(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
-    item_rel: Mapped[List['Product']] = relationship('Product', back_populates='category_rel')
+    product_rel: Mapped[List['Product']] = relationship(back_populates='category_rel')
 
 
 class Product(Base):
@@ -45,8 +45,8 @@ class Product(Base):
     photo: Mapped[str] = mapped_column(String(200))
     price: Mapped[int] = mapped_column()
 
-    category_rel: Mapped['Category'] = relationship(back_populates='products_rel')
-    basket_rel: Mapped[List['Basket']] = relationship(back_populates='category_rel')
+    category_rel: Mapped['Category'] = relationship(back_populates='product_rel')
+    basket_rel: Mapped[List['Basket']] = relationship(back_populates='product_rel')
 
 
 class Basket(Base):
