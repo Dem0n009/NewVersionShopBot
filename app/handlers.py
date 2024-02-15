@@ -3,7 +3,7 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 
 import app.keyboards as kb
-from app.database.requests import get_product
+from app.database.requests import get_product, set_user
 
 router = Router()
 
@@ -12,6 +12,7 @@ router = Router()
 @router.callback_query(F.data == 'to_main')
 async def cmd_start(message: types.Message | types.CallbackQuery):
     if isinstance(message, types.Message):
+        await set_user(message.from_user.id)
         await message.answer(f"Здравствуйте, {message.from_user.full_name}!", reply_markup=kb.main)
     else:
         await message.message.edit_text(f"Здравствуйте, {message.from_user.full_name}!", reply_markup=kb.main)
